@@ -1,25 +1,25 @@
 package edu.gorilas;
 
+import java.util.Arrays;
+
 public class Yatzy {
 
-    public static int chance(int d1, int d2, int d3, int d4, int d5) {
-        int total = 0;
-        total += d1;
-        total += d2;
-        total += d3;
-        total += d4;
-        total += d5;
-        return total;
+    private int[] dice = new int[5];
+
+    public Yatzy(int d1, int d2, int d3, int d4, int d5) {
+        this.dice[0] = d1;
+        this.dice[1] = d2;
+        this.dice[2] = d3;
+        this.dice[3] = d4;
+        this.dice[4] = d5;
     }
 
-    public static int yatzy(int... dice) {
-        int[] counts = new int[6];
-        for (int die : dice)
-            counts[die - 1]++;
-        for (int i = 0; i != 6; i++)
-            if (counts[i] == 5)
-                return 50;
-        return 0;
+    public int chance() {
+        return Arrays.stream(this.dice).sum();
+    }
+
+    public int yatzy() {
+        return (Arrays.stream(this.dice).distinct().count() <= 1) ? 50 : 0;
     }
 
     public static int ones(int d1, int d2, int d3, int d4, int d5) {
@@ -67,17 +67,6 @@ public class Yatzy {
         if (d5 == 3)
             s += 3;
         return s;
-    }
-
-    protected int[] dice;
-
-    public Yatzy(int d1, int d2, int d3, int d4, int _5) {
-        dice = new int[5];
-        dice[0] = d1;
-        dice[1] = d2;
-        dice[2] = d3;
-        dice[3] = d4;
-        dice[4] = _5;
     }
 
     public int fours() {
