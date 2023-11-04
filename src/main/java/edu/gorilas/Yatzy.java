@@ -1,92 +1,86 @@
 package edu.gorilas;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 public class Yatzy {
 
-    private final ArrayList<Integer> play = new ArrayList<>();
+    private final int[]dices = {0,0,0,0,0,0,0};
 
     public Yatzy(int firstDice, int secondDice, int thirdDice, int fourthDice, int fifthDice) {
-        this.play.add(firstDice);
-        this.play.add(secondDice);
-        this.play.add(thirdDice);
-        this.play.add(fourthDice);
-        this.play.add(fifthDice);
+        this.dices[firstDice]++;
+        this.dices[secondDice]++;
+        this.dices[thirdDice]++;
+        this.dices[fourthDice]++;
+        this.dices[fifthDice]++;
     }
 
     public Yatzy(int[] play){
-        Arrays.stream(play).forEach(dice -> this.play.add(dice));
-    }
-
-    private  boolean areAllDistinct(){
-        return  (this.play.stream().distinct().count() == this.play.size());
-    }
-
-    private int getMinDice(){
-        return this.play.stream().mapToInt(v->v).min().orElse(0);
-    }
-
-    private int getMaxDice(){
-        return this.play.stream().mapToInt(v->v).max().orElse(0);
-    }
-
-    private int countDicesByValue(int value){
-        return (int) this.play.stream().filter(num -> num==value).count();
+        Arrays.stream(play).forEach(dice -> this.dices[dice]++);
     }
 
     public int chance() {
-        return this.play.stream().mapToInt(v->v).sum();
+        int sum =0;
+        for (int i = 1; i < dices.length; i++) {
+            sum+=dices[i]*i;
+        }
+        return sum;
     }
 
     public int yatzy() {
-        return (getMaxDuplicated(5)!=0) ? 50 : 0;
+        for (int value : dices) {
+            if (value==5) return 50;
+        }
+        return 0;
     }
 
     public int onesToSixes(int playValue){
-        return  this.countDicesByValue(playValue)*playValue;
+        return  this.dices[playValue] * playValue;
+    }
+
+    private int getMinDuplicated(int times){
+        for (int i = 1; i < dices.length; i++) {
+            if (dices[i]>=times) return i;     
+        }
+        return 0;
     }
 
     private int getMaxDuplicated(int times){
-        return this.play.stream()
-                .filter(dice->Collections
-                .frequency(play, dice)>=times)
-                .mapToInt(v->v).max().orElse(0);
-    }
-
-    private Set<Integer> getPairs(){
-        return this.play.stream()
-                .filter(dice->Collections
-                .frequency(play, dice)>1)
-                .collect(Collectors.toSet());
+        for (int i = 6; i > 0; i--) {
+            if (dices[i]>=times) return i;     
+        }
+        return 0;
     }
 
     public int onePair() {
-        return this.getMaxDuplicated(2)*2;
+        return 2 * getMaxDuplicated(2);
     }
 
     public int twoPairs() {
-        Set<Integer> pairs = this.getPairs(); 
-        return (pairs.size()==2)? pairs.stream().reduce(0, (result, dice)->result+(dice*2)) : 0;
+        int maxPair = getMaxDuplicated(2);
+        int minPair = getMinDuplicated(2);
+        return (minPair==maxPair||maxPair==0||minPair==0) ? 0 : 2*maxPair+2*minPair;
     }
 
     public int fourOfaKind() {
-        return this.getMaxDuplicated(4) *4;
+        return 4 * getMaxDuplicated(4);
     }
 
     public int threeOfakind() {
-        return this.getMaxDuplicated(3) *3;
+        return 3 * this.getMaxDuplicated(3);
+    }
+
+    private boolean areAllDistinct(){
+        for (int value : dices) {
+            if (value>1) return false;
+        }
+        return true;
     }
 
     public int smallStraight() {
-       return (areAllDistinct() && getMinDice()==1 && getMaxDice()==5) ? 15:0;
+       return (areAllDistinct() && dices[6]==0) ? 15:0;
     }
 
     public int largeStraight() {
-        return (areAllDistinct() && getMinDice()==2 && getMaxDice()==6) ? 20:0;
+        return (areAllDistinct() && dices[1]==0) ? 20:0;
     }
 
     public int fullHouse() {
