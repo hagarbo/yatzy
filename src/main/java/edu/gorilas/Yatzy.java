@@ -32,7 +32,31 @@ public class Yatzy {
         return 0;
     }
 
-    public int onesToSixes(int playValue){
+    public int ones(){
+        return this.onesToSixes(1);
+    }
+
+    public int twos(){
+        return this.onesToSixes(2);
+    }
+
+    public int threes(){
+        return this.onesToSixes(3);
+    }
+
+    public int fours(){
+        return this.onesToSixes(4);
+    }
+
+    public int fives(){
+        return this.onesToSixes(5);
+    }
+
+    public int sixes(){
+        return this.onesToSixes(6);
+    }
+
+    private int onesToSixes(int playValue){
         return  this.dices[playValue] * playValue;
     }
 
@@ -86,6 +110,6 @@ public class Yatzy {
     public int fullHouse() {
         int trio = threeOfakind();
         int pair = onePair();
-        return (trio==0||pair==0)? 0 : trio+pair;
+        return (trio==0||pair==0||trio/3==pair/2)? 0 : trio+pair;
     }
 }
