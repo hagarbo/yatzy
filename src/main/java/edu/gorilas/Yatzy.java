@@ -46,7 +46,31 @@ public class Yatzy {
         return (getMaxDuplicated(5)!=0) ? 50 : 0;
     }
 
-    public int onesToSixes(int playValue){
+    public int ones(){
+        return this.onesToSixes(1);
+    }
+
+    public int twos(){
+        return this.onesToSixes(2);
+    }
+
+    public int threes(){
+        return this.onesToSixes(3);
+    }
+
+    public int fours(){
+        return this.onesToSixes(4);
+    }
+
+    public int fives(){
+        return this.onesToSixes(5);
+    }
+
+    public int sixes(){
+        return this.onesToSixes(6);
+    }
+
+    private  int onesToSixes(int playValue){
         return  this.countDicesByValue(playValue)*playValue;
     }
 
@@ -70,7 +94,7 @@ public class Yatzy {
 
     public int twoPairs() {
         Set<Integer> pairs = this.getPairs(); 
-        return (pairs.size()==2)? pairs.stream().reduce(0, (result, dice)->result+(dice*2)) : 0;
+        return (pairs.size()==2) ? pairs.stream().reduce(0, (result, dice)->result+(dice*2)) : 0;
     }
 
     public int fourOfaKind() {
