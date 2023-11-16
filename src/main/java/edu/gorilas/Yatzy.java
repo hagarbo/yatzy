@@ -117,6 +117,6 @@ public class Yatzy {
     public int fullHouse() {
         int trio = threeOfakind();
         int pair = onePair();
-        return (trio==0||pair==0)? 0 : trio+pair;
+        return (trio==0 || pair==0 || trio/3==pair/2) ? 0 : trio+pair;
     }
 }
